@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{problem.title}}</title>
+    {% include 'pre_codearea.html' %}
+    <link rel="stylesheet" href="{% static 'css/problemsolve.css' %}">
+</head>
+<body>
+    <div class="problem_inp_out_wrap">
+        {% include 'main_codearea.html' %}
+    </div>
+</body>
+    {% include 'post_codearea.html' %}
+    <div class="outputwindow" id="outputwndow">
+        <div class="heading">
+            <h2>OUTPUT: </h2>
+        </div>
+        <div class="code_result">
+
+        </div>
+    </div>
+    <script>
+        var mode = 'halfside';
+        document.getElementById('zoom_btn').addEventListener('click',function(){
+            if(mode=='halfside'){
+                document.getElementById('wrapper_code_output').style.display = 'block';
+                mode = 'fullside';
+                document.getElementById('code').style.height = '100vh';
+                document.querySelector('.CodeMirror').style.height='100vh';
+                var elem =  document.getElementById('code');
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                  } else if (elem.webkitRequestFullscreen) { /* Safari */
+                    elem.webkitRequestFullscreen();
+                  } else if (elem.msRequestFullscreen) { /* IE11 */
+                    elem.msRequestFullscreen();
+                  }
+            }else{
+                document.getElementById('wrapper_code_output').style.display = 'grid';
+                mode = 'halfside';
+                document.getElementById('code').style.height = '90vh';
+                document.querySelector('.CodeMirror').style.height='90vh';
+            }
+    })
+    document.getElementById('saveplaygroundform').action = NaN;
+    </script>
+</html>

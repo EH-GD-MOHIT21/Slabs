@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Editor Page</title>
+    {% include 'pre_codearea.html' %}
+    <link rel="stylesheet" href="{% static 'css/codearea.css' %}">
+</head>
+<body>
+    {% include 'main_codearea.html' %}
+</body>
+    {% include 'post_codearea.html' %}
+    <script>
+        document.getElementById('zoom_btn').addEventListener('click',function(){
+            if(document.getElementById('wrapper_code_output').style.flexDirection=='column'){
+                document.getElementById('code').style.width = '50%';
+                document.getElementById('wrapper_code_output').style.flexDirection = 'row';
+                document.getElementById('outputwndow').style.width = '50%';
+                document.getElementById('outputwndow').style.marginTop = '0px';
+            }else{
+                document.getElementById('wrapper_code_output').style.flexDirection = 'column';
+                document.getElementById('code').style.width = '100%';
+                document.getElementById('outputwndow').style.width = '100%';
+                document.getElementById('outputwndow').style.marginTop = '20px';
+            }
+        })
+    </script>
+</html>

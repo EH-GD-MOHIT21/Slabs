@@ -1,0 +1,107 @@
+<form action="/saveplayground" method="post" id="saveplaygroundform">
+    <input type="hidden" name="code_value" id="code_val" value="{{code}}">
+    <input type="hidden" name="id" id="id_val">
+    {% csrf_token %}
+    <div class="codeeditoroptions">
+        <div class="toppart">
+            <select id="editor_theme_selection">
+                <option value="default">Choose Editor Theme</option>
+                <option value="blackboard">blackboard</option>
+                <option value="material-ocean">material-ocean</option>
+                <option value="cobalt">cobalt</option>
+                <option value="material-palenight">material-palenight</option>
+                <option value="xq-light">xq-light</option>
+                <option value="shadowfox">shadowfox</option>
+                <option value="dracula">dracula</option>
+            </select>
+            <i id="zoom_btn" class="fa fa-arrows-alt" aria-hidden="true"></i>
+            <i id="reset_code" class="fa fa-repeat" aria-hidden="true"></i>
+            <select id="choose_programming_language" name="language">
+                {% if language %}
+                    {% if language == "python" %}
+                        <option selected value="python">python3</option>
+                        <option value="python">Choose Programming Language</option>
+                        <option value="text/x-csrc">c</option>
+                        <option value="text/x-c++src">c++</option>
+                        <option value="text/x-java">Java</option>
+                    {% elif language == "text/x-csrc" %}
+                        <option selected value="text/x-csrc">c</option>
+                        <option value="python">Choose Programming Language</option>
+                        <option value="python">python3</option>
+                        <option value="text/x-c++src">c++</option>
+                        <option value="text/x-java">Java</option>
+                    {% elif language == "text/x-c++src" %}
+                        <option value="text/x-c++src">c++</option>
+                        <option value="python">Choose Programming Language</option>
+                        <option value="python">python3</option>
+                        <option value="text/x-csrc">c</option>
+                        <option value="text/x-java">Java</option>
+                    {% elif language == "text/x-java" %}
+                        <option value="text/x-java">Java</option>
+                        <option value="python">Choose Programming Language</option>
+                        <option value="python">python3</option>
+                        <option value="text/x-csrc">c</option>
+                        <option value="text/x-c++src">c++</option>
+                    {% endif %}
+                {% else %}
+                <option value="python">Choose Programming Language</option>
+                <option value="python">python3</option>
+                <option value="text/x-csrc">c</option>
+                <option value="text/x-c++src">c++</option>
+                <option value="text/x-java">Java</option>
+                {% endif %}
+            </select>
+
+            <select id="set_font_size">
+                <option>13px</option>
+                <option>6px</option>
+                <option>8px</option>
+                <option>10px</option>
+                <option>15px</option>
+                <option>18px</option>
+                <option>21px</option>
+                <option>24px</option>
+                <option>27px</option>
+                <option>30px</option>
+                <option>33px</option>
+                <option>36px</option>
+                <option>39px</option>
+                <option>42px</option>
+                <option>45px</option>
+                <option>48px</option>
+                <option>50px</option>
+            </select>
+            {% if playground %}
+                <button id="save_playground_btn">Save Playground</button>
+            {% else %}
+                <button type="button" id="submit_code">Submit Code</button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="wrapper_code_output" id="wrapper_code_output">
+        {% block problemstate%}
+            <div class="problem_statement" id="problem_statement">
+                {{problem.statement | safe }}
+            </div>
+        {% endblock %}
+        <div id="code">
+        </div>
+        <div class="outputwindow problemareanone" id="outputwndow" style="width: 100%;overflow: auto;white-space: nowrap;padding: 7px;height: 70vh;">
+            <div class="heading">
+                <h2>OUTPUT: </h2>
+            </div>
+            <div class="code_result" id="code_result_area">
+
+            </div>
+        </div>
+    </div>
+    <div class="extrapart">
+        <div>
+            <input type="checkbox" id="cicheckbox">
+            <label for="cicheckbox">Custom Input</label>
+        </div>
+        <textarea name="" id="custom_input_box" cols="30" rows="10"></textarea>
+        <button type="button" id="run_code_btn">Run Code</button>
+    </div>
+</form>

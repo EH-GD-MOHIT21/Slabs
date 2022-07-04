@@ -1,0 +1,102 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.min.css" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.js"
+        integrity="sha512-XMlgZzPyVXf1I/wbGnofk1Hfdx+zAWyZjh6c21yGo/k1zNC4Ve6xcQnTDTCHrjFGsOrVicJsBURLYktVEu/8vQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/mode/python/python.min.js"
+        integrity="sha512-/mavDpedrvPG/0Grj2Ughxte/fsm42ZmZWWpHz1jCbzd5ECv8CB7PomGtw0NAnhHmE/lkDFkRMupjoohbKNA1Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/mode/clike/clike.min.js" integrity="sha512-GAled7oA9WlRkBaUQlUEgxm37hf43V2KEMaEiWlvBO/ueP2BLvBLKN5tIJu4VZOTwo6Z4XvrojYngoN9dJw2ug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+{% if id %}
+<script>
+    var editor = CodeMirror(document.getElementById("code"), {
+    mode: {
+        name: "{{language}}",
+        version: 3,
+        singleLineStringErrors: false
+        },
+    lineNumbers: true,
+    indentUnit: 4,
+    matchBrackets: true,
+    value: document.getElementById('code_val').value
+    });
+/*
+    modes -> text/x-csrc , text/x-c++src , text/x-java , python (3 or 2)
+*/
+</script>
+{% else %}
+<script>
+    var editor = CodeMirror(document.getElementById("code"), {
+    mode: {
+        name: "python",
+        version: 3,
+        singleLineStringErrors: false
+        },
+    lineNumbers: true,
+    indentUnit: 4,
+    matchBrackets: true,
+    value: 'print("Mohit Satija!")'
+    });
+/*
+    modes -> text/x-csrc , text/x-c++src , text/x-java , python (3 or 2)
+*/
+</script>
+{% endif %}
+
+
+<script>
+    document.getElementById('cicheckbox').addEventListener('click',function(){
+        if(document.getElementById('cicheckbox').checked){
+            document.getElementById('custom_input_box').style.display = 'block';
+        }else{
+            document.getElementById('custom_input_box').style.display = 'none';
+        }
+    })
+
+    document.getElementById('editor_theme_selection').addEventListener('change',function(){
+        editor.setOption('theme',document.getElementById('editor_theme_selection').value);
+    })
+
+    function reset_code(language){
+        if(language.includes('c++'))
+            editor.doc.setValue('#include<iostream>\nusing namespace std;\n\nint main(){\n   cout << "Hello World!";\n   return 0;\n}');
+        else if(language.includes('c'))
+            editor.doc.setValue('#include<stdio.h>\n\nint main(){\n   printf("Hello World!");\n   return 0;\n}');
+        else if(language.includes('java'))
+            editor.doc.setValue('public class Mohit{\n  public static void main(String[] args){\n   System.out.println("Hello World");\n    }\n}');
+        else
+            editor.doc.setValue('print("hello World!")');
+    }
+
+    document.getElementById('choose_programming_language').addEventListener('change',function(){
+        var value = document.getElementById('choose_programming_language').value;
+        editor.setOption('mode',value)
+        reset_code(value);
+    })
+
+    document.getElementById('reset_code').addEventListener('click',function(){
+        const input = prompt("Are you sure to reset code? Type yes to continue")
+        if(input=='yes')
+            reset_code(document.getElementById('choose_programming_language').value);
+    })
+
+
+    document.getElementById('set_font_size').addEventListener('click',function(){
+        document.getElementById('code').style.fontSize = document.getElementById('set_font_size').value;
+    })
+
+
+    document.getElementById('saveplaygroundform').onsubmit = function(){
+        document.getElementById('code_val').value = editor.getValue();
+    }
+
+    if(document.URL.includes('id')){
+        var id = document.URL.split('id=')[1];
+        document.getElementById('id_val').value = id;
+    }
+
+    document.getElementById('run_code_btn').addEventListener('click',function(){
+        executecode(editor.getValue(), document.getElementById('custom_input_box').value, document.getElementById('choose_programming_language').value )
+    })
+</script>

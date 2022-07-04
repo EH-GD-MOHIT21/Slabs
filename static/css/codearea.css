@@ -1,0 +1,68 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.codeeditoroptions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px auto;
+}
+
+.wrapper_code_output {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#code,
+.outputwindow {
+    width: 50%;
+    border: 1px solid black;
+    min-height: 90vh;
+}
+
+.outputwindow{
+    height: 90vh;
+    overflow: auto;
+    white-space: nowrap;
+    padding: 10px;
+}
+
+.outputwindow {
+    background: lightgray;
+}
+
+.CodeMirror {
+    width: 100%;
+    min-height: 90vh;
+}
+
+#run_code_btn {
+    display: block;
+    cursor: pointer;
+}
+
+#custom_input_box {
+    display: none;
+}
+
+.extrapart {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Old versions of Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+}
+
+i {
+    cursor: pointer;
+}

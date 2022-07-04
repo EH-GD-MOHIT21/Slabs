@@ -1,0 +1,104 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.codeeditoroptions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px auto;
+}
+
+.problem_statement{
+    padding: 10px 20px;
+    line-height: 1.7rem;
+    overflow-y: auto;
+}
+
+.wrapper_code_output{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(270px, 1fr));
+}
+
+#code,
+.problem_statement {
+    border: 1px solid black;
+    height: 90vh;
+    margin: 5px;
+}
+
+.outputwindow {
+    width: 50%;
+    border: 1px solid black;
+    min-height: 50vh;
+    margin: 20px auto;
+    display: none;
+}
+
+
+.extrapart{
+    margin: 10px 8px;
+}
+
+.extrapart div{
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.extrapart label{
+    cursor: pointer;
+}
+
+.extrapart button{
+    padding: 10px 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    background: lightgreen;
+    font-weight: 600;
+}
+
+.outputwindow {
+    background: lightgray;
+}
+
+.problemareanone{
+    display: none;
+}
+
+.CodeMirror {
+    width: 100%;
+    min-height: 90vh;
+    border: 1px solid black;
+}
+
+i,button{
+    cursor: pointer;
+}
+
+#custom_input_box {
+    display: none;
+}
+
+.extrapart,.codeeditoroptions {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Old versions of Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+}
+
+.extrapart textarea{
+    padding: 10px;
+}
