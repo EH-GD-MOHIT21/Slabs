@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from .models import Playground, Problem
+from .models import Playground, Problem, TextCase
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .tasks import execute_code
@@ -82,3 +82,25 @@ class ExecuteCode(APIView):
                 pass
             return Response({'status':200,'message':'success'})
         return Response({'status':403,'message':'Please authenticate yourself'})
+
+
+
+class SubmitCode(APIView):
+    def post(self,request,*args,**kwargs):
+        if request.user.is_authenticated:
+            try:
+                problem_code = request.data['problem_id']
+                code = request.data["code"]
+                language = request.data["language"]
+                try:
+                    test_case = TextCase.objects.get(problem__id=int(problem_code))
+                    task_id = execute_code.delay(code,language,test_case.inputs,request.user.username,test_case.output.replace('\r\n','\n').replace('\r','\n'),problem_code)
+                    print(task_id)
+                    return Response({'status':200,'message':'success',"task_id": str(task_id)})
+                except Exception as e:
+                    print(e)
+                    return Response({'status':400,'message':'The given problem is missing testcases.'})
+            except:
+                return Response({'status':400,'message':'One or more required parameters missing.'})
+        else:
+            return Response({'status':403,'message':'Please authenticate yourself.'})

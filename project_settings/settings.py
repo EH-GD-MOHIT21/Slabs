@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     "django_celery_results",
     'celery_progress',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -155,3 +156,5 @@ CSRF_COOKIE_NAME = 'X-CSRFToken'
 
 
 COMPILER = os.getenv('COMPILER')
+
+AUTH_USER_MODEL = 'users.User'

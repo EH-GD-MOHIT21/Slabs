@@ -82,12 +82,13 @@
     <div class="wrapper_code_output" id="wrapper_code_output">
         {% block problemstate%}
             <div class="problem_statement" id="problem_statement">
+                <input type="hidden" id="problem_id" name="problem_id" value="{{problem.id}}">
                 {{problem.statement | safe }}
             </div>
         {% endblock %}
         <div id="code">
         </div>
-        <div class="outputwindow problemareanone" id="outputwndow" style="width: 100%;overflow: auto;white-space: nowrap;padding: 7px;height: 70vh;">
+        <div class="outputwindow problemareanone" id="outputwndow" style="overflow: auto;white-space: nowrap;padding: 7px;height: 70vh;">
             <div class="heading">
                 <h2>OUTPUT: </h2>
             </div>

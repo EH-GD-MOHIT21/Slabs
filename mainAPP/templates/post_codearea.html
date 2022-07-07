@@ -99,4 +99,8 @@
     document.getElementById('run_code_btn').addEventListener('click',function(){
         executecode(editor.getValue(), document.getElementById('custom_input_box').value, document.getElementById('choose_programming_language').value )
     })
+
+    document.getElementById('submit_code').addEventListener('click',function(){
+        submitcode(editor.getValue(), document.getElementById('choose_programming_language').value,  document.getElementById('problem_id').value)
+    })
 </script>

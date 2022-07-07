@@ -1,6 +1,6 @@
 from django.utils.text import slugify
 from django.db import models
-from django.contrib.auth.models import User
+from users.models import User
 from django.utils import timezone
 # Create your models here.
 
@@ -31,19 +31,9 @@ class Problem(models.Model):
     points = models.FloatField(default=10)
 
 
-    def unique_slug_generator(self, new_slug=None):
-        if new_slug is not None:
-            slug = new_slug  
-        else:
-            slug = slugify(self.title)  
-
-        qs_exists = Problem.objects.filter(url=slug).exists()
-        
-        if qs_exists:
-            new_slug = "{slug}-{randstr}".format(slug=slug, randstr=str(len(Problem.objects.all())))
-            return new_slug
-
-        return slug
+    def unique_slug_generator(self):
+        slug = slugify(self.title)  
+        return slug + "-" + str(self.id)
 
 
     def save(self,*args,**kwargs):
