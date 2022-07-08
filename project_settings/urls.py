@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('summernote/', include('django_summernote.urls')),
     path('',include('mainAPP.urls')),
+    path('accounts/', include('allauth.urls')),
     re_path(r'^celery-progress/', include('celery_progress.urls')),  # the endpoint is configurable
 ]

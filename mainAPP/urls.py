@@ -9,4 +9,7 @@ urlpatterns = [
     path('viewproblem/<slug:url>',views.RenderProblemSolvePage),
     path('executecode',views.ExecuteCode.as_view()),
     path('submitcode',views.SubmitCode.as_view()),
+    path('create/challenge',views.RenderCreateChallenge),
+    path('join/challenge=<int:cid>',views.HandleJoinChallenge),
+    path('save/challenge',views.SaveChallenge),
 ]

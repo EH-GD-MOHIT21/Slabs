@@ -46,6 +46,11 @@ INSTALLED_APPS = [
     "django_celery_results",
     'celery_progress',
     'users',
+    'channels',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -158,3 +163,59 @@ CSRF_COOKIE_NAME = 'X-CSRFToken'
 COMPILER = os.getenv('COMPILER')
 
 AUTH_USER_MODEL = 'users.User'
+
+ASGI_APPLICATION = "project_settings.asgi.application"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SITE_ID = 1
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '348112354410-olp3k7jc99r6ld908v2qgt0hf7iqkfqm.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': SOCIAL_AUTH_GOOGLE_OAUTH2_KEY,
+            'secret': SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET,
+            'key': ''
+        }
+    }
+}
+
+# email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "no.reply.python.py@gmail.com"
+EMAIL_HOST_PASSWORD = "qwerty@123"
+EMAIL_USE_TLS = True
+
+
+# django all-auth settings
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
+ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 3600  # 1 hrs block
+ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
+SOCIALACCOUNT_LOGIN_ON_GET = True

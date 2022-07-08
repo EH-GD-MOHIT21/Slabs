@@ -3,6 +3,7 @@ from .models import Playground, Problem, TextCase
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .tasks import execute_code
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
@@ -104,3 +105,22 @@ class SubmitCode(APIView):
                 return Response({'status':400,'message':'One or more required parameters missing.'})
         else:
             return Response({'status':403,'message':'Please authenticate yourself.'})
+
+
+
+@login_required(login_url='/accounts/login')
+def RenderCreateChallenge(request):
+    return render(request,'challenge_customize.html')
+
+
+
+@login_required(login_url='/accounts/login')
+def HandleJoinChallenge(request):
+    return render(request,'challenge.html')
+
+
+@login_required(login_url='/accounts/login')
+def SaveChallenge(request):
+    if request.method != 'POST':
+        return redirect('/')
+    return redirect('/')

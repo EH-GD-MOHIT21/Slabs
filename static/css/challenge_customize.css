@@ -1,0 +1,65 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.bodytitle h1{
+    margin: 20px auto;
+}
+
+.finalizewrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.wrapperbody{
+    display: block;
+    margin: auto;
+    width: 600px;
+    background: gray;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.wrapperinputfield{
+    margin: 10px auto;
+    display: flex;
+    text-align: right;
+    padding: 10px;
+    align-items: center;
+}
+
+.wrapperinputfield label{
+    flex: 0.3;
+    margin-right: 10px;
+}
+
+.wrapperinputfield input{
+    outline: none;
+    border: none;
+    padding: 5px 10px;
+    flex: 0.7;
+}
+
+.wrapperinputfield select{
+    flex: 0.7;
+    padding: 5px 10px;
+}
+
+#optionalparam{
+    display: none;
+}
+
+button{
+    display: block;
+    margin: 20px auto;
+    padding: 6px 10px;
+    outline: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+}

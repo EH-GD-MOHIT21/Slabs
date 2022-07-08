@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.utils.text import slugify
 from django.db import models
 from users.models import User
@@ -63,3 +64,27 @@ class UserSubmission(models.Model):
     code = models.TextField()
     submission_time = models.DateTimeField(auto_now_add=True)
     problem = models.ForeignKey(Problem,on_delete=models.Case)
+
+
+
+class Challenge(models.Model):
+    author = models.ForeignKey(User,on_delete=models.Case)
+    title = models.CharField(max_length=100)
+    password = models.TextField(null=True,blank=True)
+    open_time = models.DateTimeField()
+    close_time = models.DateTimeField(null=True,blank=True)
+    total_problems = models.IntegerField()
+    problems = models.ManyToManyField(Problem)
+    participates = models.ManyToManyField(User,related_name='participates')
+    date_created = models.DateTimeField()
+
+
+    @property
+    def set_date_created(self):
+        self.date_created = timezone.now()
+
+
+    def save(self,*args,**kwargs):
+        if not isinstance(self.date_created,datetime):
+            self.set_date_created
+        super(Challenge,self).save(*args,**kwargs)
