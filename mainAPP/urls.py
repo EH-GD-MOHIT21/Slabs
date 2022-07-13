@@ -12,4 +12,7 @@ urlpatterns = [
     path('create/challenge',views.RenderCreateChallenge),
     path('join/challenge=<int:cid>',views.HandleJoinChallenge),
     path('save/challenge',views.SaveChallenge),
+    path('mychallenges',views.DisplayMyChallenges), # my (public+private) challenges
+    path('challenges',views.DisplayAvailableChallenges), #public challenges
+    path('search/challenge',views.SearchChallenge), # search a challenge
 ]

@@ -21,40 +21,46 @@
                 {% csrf_token %}
                 <div class="wrapperinputfield">
                     <label for="ct-slabs">Contest Title</label>
-                    <input type="text" name="" id="ct-slabs">
+                    <input type="text" name="Contest_title" id="ct-slabs">
                 </div>
                 <div class="wrapperinputfield">
                     <label for="cp-slabs">Contest Password</label>
-                    <input type="password" placeholder="Enter strong password or leave blank" name="" id="cp-slabs">
+                    <input type="password" placeholder="Enter strong password or leave blank" name="Contest_pass" id="cp-slabs">
                 </div>
                 <div class="wrapperinputfield">
                     <label for="cot">Select open time</label>
-                    <input type="datetime-local" name="" id="cot">
+                    <input type="datetime-local" name="Contest_Open_Time" id="cot">
                 </div>
                 <div class="wrapperinputfield">
                     <label for="cct">Select close time</label>
-                    <input type="datetime-local" name="" id="cct">
+                    <input type="datetime-local" name="Contest_Close_Time" id="cct">
                 </div>
                 <div class="wrapperinputfield">
                     <label for="stz">Select time zone</label>
-                    <select name="" id="stz">
-                        <option value=""></option>
+                    <select name="Contest_TimeZone" id="stz">
+                        {% for time in timezone %}
+                        {% if time == 'Asia/Kolkata' %}
+                        <option value="{{time}}" selected>Default: {{time}}</option>
+                        {% else %}
+                        <option value="{{time}}">{{time}}</option>
+                        {% endif %}
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="wrapperinputfield">
                     <label for="epc">Enter Problems Count</label>
-                    <input type="text" name="" id="epc">
+                    <input type="text" name="Contest_Problem_Count" id="epc">
                 </div>
                 <div class="wrapperinputfield">
                     <label for="pts">Select Problem types</label>
-                    <select name="" id="pts">
+                    <select name="Contest_Problem_Type" id="pts">
                         <option value="random">Random</option>
                         <option value="specified">Let me choose</option>
                     </select>
                 </div>
                 <div class="wrapperinputfield" id="optionalparam">
                     <label for="epi">Enter Problem Ids</label>
-                    <input type="text" placeholder="comma seperated value of ids" id="epi">
+                    <input type="text" name="Contest_Problems" placeholder="comma seperated value of ids" id="epi">
                 </div>
 
                 <button type="submit">Create Challenge</button>

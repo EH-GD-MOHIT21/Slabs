@@ -38,6 +38,8 @@ class Problem(models.Model):
 
 
     def save(self,*args,**kwargs):
+        # pre save for generating id of model to get unique url
+        super(Problem,self).save(*args,**kwargs)
         self.url = self.unique_slug_generator()
         super(Problem,self).save(*args,**kwargs)
 

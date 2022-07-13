@@ -1,0 +1,54 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.makewrap{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.card{
+    margin: 10px;
+    padding: 10px;
+    width: 300px;
+    background: gray;
+    border-radius: 10px;
+}
+
+.card .cardtitle,.card .join_btn{
+    text-align: center;
+    font-size: 18px;
+}
+
+.card .cardauthor,.card .cardproblemcount,.card .cardcreatedate,.card .carduserscount{
+    text-align: right;
+    font-size: 15px;
+}
+
+.card .join_btn{
+    display: block;
+    margin: 10px auto;
+    margin-top: 18px;
+    border: 2px solid white;
+    color: white;
+    width: 180px;
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.card .join_btn:hover{
+    background: white;
+    color: black;
+    transition: 0.5s;
+}
+
+.extrapart{
+    text-align: center;
+    display: block;
+    margin: 20px auto;
+}

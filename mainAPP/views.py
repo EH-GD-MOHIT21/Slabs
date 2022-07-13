@@ -1,9 +1,16 @@
+from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound
 from django.shortcuts import redirect, render
-from .models import Playground, Problem, TextCase
+from .models import Challenge, Playground, Problem, TextCase
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .tasks import execute_code
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password,check_password
+import random
+from django.conf import settings
+import os
+from datetime import datetime
+import pytz
 # Create your views here.
 
 
@@ -110,17 +117,149 @@ class SubmitCode(APIView):
 
 @login_required(login_url='/accounts/login')
 def RenderCreateChallenge(request):
-    return render(request,'challenge_customize.html')
+    tzs = []
+    with open(os.path.join(settings.BASE_DIR,'project_settings/timezones.txt'),'r') as file:
+        data = file.read()
+        for line in data.split('\n'):
+            tzs.append(line.strip())
+    return render(request,'challenge_customize.html',{'timezone':tzs})
 
 
 
 @login_required(login_url='/accounts/login')
-def HandleJoinChallenge(request):
-    return render(request,'challenge.html')
+def HandleJoinChallenge(request,cid,redirected=False):
+    try:
+        challenge = Challenge.objects.get(id=int(cid))
+    except:
+        return HttpResponseNotFound()
+
+    if not redirected and challenge.password != None:
+        # not entered password and trying to join
+        return redirect('/challenges')
+    
+    users = challenge.participates
+    if(users.contains(request.user)):
+        return render(request,'challenge.html')
+    else:
+        challenge.participates.add(request.user)
+        challenge.save()
+        return render(request,'challenge.html')
 
 
 @login_required(login_url='/accounts/login')
 def SaveChallenge(request):
     if request.method != 'POST':
         return redirect('/')
-    return redirect('/')
+    # capture data
+    data = request.POST
+    user = request.user
+    title = data['Contest_title']
+    password = data['Contest_pass']
+    open_time = data['Contest_Open_Time']
+    close_time = data['Contest_Close_Time']
+    time_zone = data['Contest_TimeZone']
+    problem_count = int(data['Contest_Problem_Count'])
+    problem_type = data['Contest_Problem_Type']
+    contest_problems = data['Contest_Problems']
+
+    model = Challenge()
+    model.author = user
+    model.title = title
+    if password!="":
+        model.password = make_password(password)
+    model.open_time = ManageDate(open_time,time_zone)
+    if close_time != '':
+        model.close_time = ManageDate(close_time,time_zone)
+    model.total_problems = problem_count
+    model.save()
+    all_problems = Problem.objects.all()
+    all_problems_len = all_problems.count()
+    try:
+        if problem_type == 'random':
+            problems_ids = random.sample(range(0,all_problems_len),problem_count)
+            for ids in problems_ids:
+                model.problems.add(all_problems[ids])
+        else:
+            problems_ids = contest_problems.split(',')
+            for ids in problems_ids:
+                try:
+                    pblm = Problem.objects.get(id=int(ids))
+                    model.problems.add(pblm)
+                except:
+                    pass
+    except Exception as e:
+        # not enough problems exists on server
+        # add all problems to challenge
+        for problem in all_problems:
+            model.problems.add(problem)
+
+    model.save()
+    return redirect('/mychallenges')
+
+
+
+def DisplayMyChallenges(request):
+    challeges = Challenge.objects.filter(author=request.user)
+    return render(request,'display_challenges.html',{'challeges':ParseChallengesToDisplay(challeges)})
+
+
+
+def DisplayAvailableChallenges(request):
+    #public challenges
+    challeges = Challenge.objects.filter(password=None)
+    return render(request,'display_challenges.html',{'challeges':ParseChallengesToDisplay(challeges)})
+
+
+def ParseChallengesToDisplay(challenges):
+    return_this = []
+    for challenge in challenges:
+        obj = {}
+        obj['title'] = challenge.title
+        obj['id'] = challenge.id
+        obj['author'] = challenge.author
+        obj['close_time'] = challenge.close_time
+        obj['open_time'] = challenge.open_time
+        obj['date_created'] = challenge.date_created
+        obj['problems'] = challenge.problems.count()
+        obj['participates'] = challenge.participates.count()
+        return_this.append(obj)
+    
+    return return_this
+
+
+
+def SearchChallenge(request):
+    id = request.POST['id']
+    password = request.POST['password']
+    try:
+        challeges = Challenge.objects.get(id=int(id))
+    except:
+        return HttpResponseNotFound()
+    render_it = False
+    if challeges.password!=None:
+        if check_password(password,challeges.password):
+            return HandleJoinChallenge(request,challeges.id,True)
+    else:
+        render_it = True
+    
+    if render_it:
+        return render(request,'display_challenges.html',{'challeges':ParseChallengesToDisplay([challeges])})
+    else:
+        return HttpResponseNotFound()
+
+
+
+def ManageDate(date,user_timezone):
+    try:
+        date,time = date.split('T')
+        year,month,day = date.split('-')
+        hour,minute = time.split(':')
+        date = f'{day}/{month}/{year} {hour}:{minute}:00'
+        format  = "%d/%m/%Y %H:%M:%S"
+        local = pytz.timezone(user_timezone)
+        temp = datetime.strptime(date,format)
+        local_dt = local.localize(temp, is_dst=None)
+        temp = local_dt.astimezone(pytz.UTC)
+        return temp
+    except:
+        return None
