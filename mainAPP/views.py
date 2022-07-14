@@ -1,4 +1,4 @@
-from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound
 from django.shortcuts import redirect, render
 from .models import Challenge, Playground, Problem, TextCase
 from rest_framework.views import APIView
@@ -11,6 +11,7 @@ from django.conf import settings
 import os
 from datetime import datetime
 import pytz
+from django.utils import timezone
 # Create your views here.
 
 
@@ -133,17 +134,28 @@ def HandleJoinChallenge(request,cid,redirected=False):
     except:
         return HttpResponseNotFound()
 
-    if not redirected and challenge.password != None:
+    if not redirected and not (challenge.password==None or challenge.password==''):
         # not entered password and trying to join
         return redirect('/challenges')
-    
-    users = challenge.participates
-    if(users.contains(request.user)):
-        return render(request,'challenge.html')
-    else:
-        challenge.participates.add(request.user)
-        challenge.save()
-        return render(request,'challenge.html')
+
+    if challenge.open_time <= timezone.now():
+        if challenge.close_time == None or challenge.close_time > timezone.now():
+            users = challenge.participates
+
+            if(users.contains(request.user)):
+                return render(request,'challenge.html')
+            else:
+                challenge.participates.add(request.user)
+                challenge.save()
+                return render(request,'challenge.html')
+
+        users = challenge.participates
+        if(users.contains(request.user)):
+            return render(request,'challenge.html')
+
+        return HttpResponse('<h1>Time for joining this challenge has ended.</h1>')
+        
+    return HttpResponse('<h1>Time for joining this challenge is not begin yet.</h1>')
 
 
 @login_required(login_url='/accounts/login')
@@ -222,6 +234,9 @@ def ParseChallengesToDisplay(challenges):
         obj['date_created'] = challenge.date_created
         obj['problems'] = challenge.problems.count()
         obj['participates'] = challenge.participates.count()
+        obj['private'] = False
+        if challenge.password:
+            obj['private'] = True
         return_this.append(obj)
     
     return return_this
@@ -236,7 +251,7 @@ def SearchChallenge(request):
     except:
         return HttpResponseNotFound()
     render_it = False
-    if challeges.password!=None:
+    if not (challeges.password==None or challeges.password==''):
         if check_password(password,challeges.password):
             return HandleJoinChallenge(request,challeges.id,True)
     else:

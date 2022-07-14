@@ -25,7 +25,11 @@
                 {% else %}
                 <div class="cardopentill">Open Till: Always</div>
                 {% endif %}
+                {% if not challenge.private %}
                 <a class="join_btn" href="/join/challenge={{challenge.id}}" target="_blank">Join this Challenge</a>
+                {% else %}
+                <a class="join_btn" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Join this Challenge</a>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
