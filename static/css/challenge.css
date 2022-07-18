@@ -1,0 +1,195 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+.wrapperbodycontainer .childwrapper{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
+.wrapperbodycontainer .childwrapper .leftpaneproblems{
+    width: 33%;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.wrapperbodycontainer .childwrapper .rightmiddlepanelogs{
+    width: 33%;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.wrapperbodycontainer .childwrapper .rightmiddlepanelogs .wrapperlogs .logboxcontainer{
+    height: 85vh;
+    overflow-y: auto;
+    width: 90%;
+    border: 1px solid black;
+    margin: 10px auto;
+    background: rgba(239,234,226,.7);
+    background-image: url('/static/pics/bg-chat-tile-dark_a4be512e7195b6b733d9110b408f075d.png');
+}
+
+.rightmiddlepanelogs .wrapperlogs .sendmessage{
+    margin: 10px;
+    margin-top: 4vh;
+    padding: 10px;
+    text-align: center;
+}
+
+.rightmiddlepanelogs .wrapperlogs .sendmessage input{
+    border: none;
+    outline: none;
+    padding: 6px;
+    font-size: 18px;
+    background: transparent;
+    border-bottom: 2px solid black;
+    color: black;
+    width: 70%;
+}
+
+.rightmiddlepanelogs .wrapperlogs .sendmessage button{
+    cursor: pointer;
+    padding: 6px 10px;
+    font-size: 16px;
+}
+
+.wrapperbodycontainer .childwrapper .rightpaneleaderboard{
+    width: 33%;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.wrapperbodycontainer .childwrapper .resizer{
+    width: 0.5%;
+    height: 100vh;
+    background: #f8f9fa;
+    cursor: col-resize;
+}
+
+.wrapperbodycontainer .childwrapper .resizer:hover{
+    background: gray;
+}
+
+/* new */
+
+input[type=text], textarea, input[type=email], input[type=password], input[type=tel], input[type=url], input[type=search], input[type=date] {
+    padding: 10px;
+    width: 100%;
+    font-size: 14px;
+    font-family: inherit;
+    line-height: 24px;
+    color: #555;
+    background-color: #f1f1f1;
+    border: none;
+    transition: all 0.2s ease;
+    -webkit-transition: all 0.2s ease;
+}
+input[type=text], textarea, input[type=email], input[type=password], input[type=tel], input[type=url], input[type=search], input[type=date], .material.woocommerce-page[data-form-style="default"] input#coupon_code {
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 4px;
+    border: 2px solid rgba(0,0,0,0);
+}
+/* /end Codepen Specific */
+/* Ladder Navigation */
+  #leaderboard {
+      padding:50px;
+  }
+  .ladder-nav {
+      display:flex;
+      flex-wrap:wrap;
+      align-items: center;
+      background: lightgreen;
+      padding:10px 25px;
+      border-radius:10px;
+      border:1px solid lightgreen;
+  }
+  .ladder-title {
+    flex:2;
+  }
+  .ladder-search {
+    flex:1;
+    padding-right:25px;
+  }
+  .ladder-title {
+    font-size:20px;
+    font-weight:bold;
+    text-transform:uppercase;
+  }
+  .ladder-search input {
+      color:black
+  }
+/* /end Ladder Navigation */
+/* Leaderboard Results */
+.leaderboard-results {
+  text-align:left;
+  border-collapse: collapse;
+}
+.leaderboard-results thead th {
+  padding: 25px;
+  color:#747474;
+  font-size:14px;
+  font-weight:bold;
+}
+.leaderboard-results tbody td {
+  padding:15px 25px;
+  background:#1a1a1a;
+  font-size:16px;
+  border-bottom:5px solid #232323;
+}
+.leaderboard-results tbody td:nth-of-type(7) {
+  font-weight:bold;
+}
+.leaderboard-results tbody tr:hover td {
+    background:#1d1d1d;
+}
+.leaderboard-results tbody tr {
+  color:#747474;
+}
+.leaderboard-results tbody tr:first-child {
+  color:crimson;
+}
+.leaderboard-results tbody span {
+  font-weight:bold;
+  padding:10px 15px;
+  border-radius:50%;
+}
+.leaderboard-results tbody tr:first-child span {
+  color:black;
+}
+.leaderboard-results tbody tr span {
+  background:#262626;
+  color:#747474;
+}
+/* /end Leaderboard Results */
+
+
+.wrapperproblem {
+  min-width: 500px;
+  max-width: 60%;
+}
+
+.problemcard {
+  width: 100%;
+  background: lightgreen;
+  margin: 20px 15px;
+  padding: 15px 30px;
+  cursor: pointer;
+  border-radius: 7px;
+}
+
+.author,
+.solvedratio {
+  text-align: right;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.problemcard .title {
+  font-size: 18px;
+  font-weight: bolder;
+}

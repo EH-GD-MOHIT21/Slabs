@@ -60,14 +60,6 @@ class Problem_Rating(models.Model):
 
 
 
-class UserSubmission(models.Model):
-    # can not be editable model
-    user = models.ForeignKey(User,on_delete=models.Case)
-    code = models.TextField()
-    submission_time = models.DateTimeField(auto_now_add=True)
-    problem = models.ForeignKey(Problem,on_delete=models.Case)
-
-
 
 class Challenge(models.Model):
     author = models.ForeignKey(User,on_delete=models.Case)
@@ -90,3 +82,13 @@ class Challenge(models.Model):
         if not isinstance(self.date_created,datetime):
             self.set_date_created
         super(Challenge,self).save(*args,**kwargs)
+
+
+
+class UserSubmission(models.Model):
+    # can not be editable model
+    user = models.ForeignKey(User,on_delete=models.Case)
+    code = models.TextField()
+    submission_time = models.DateTimeField(auto_now_add=True)
+    problem = models.ForeignKey(Problem,on_delete=models.Case)
+    challenge = models.ForeignKey(Challenge,null=True,blank=True,on_delete=models.Case)

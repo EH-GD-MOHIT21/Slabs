@@ -67,7 +67,8 @@ ROOT_URLCONF = 'project_settings.urls'
 
 
 TEMPLATES_DIRS = [
-    os.path.join(BASE_DIR,'mainAPP/templates')
+    os.path.join(BASE_DIR,'mainAPP/templates'),
+    os.path.join(BASE_DIR,'users/templates'),
 ]
 
 
@@ -219,3 +220,8 @@ ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 3600  # 1 hrs block
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
 SOCIALACCOUNT_LOGIN_ON_GET = True
+
+
+ACCOUNT_FORMS = {
+    'signup': 'users.forms.SignupForm',
+}

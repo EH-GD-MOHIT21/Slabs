@@ -7,6 +7,7 @@ urlpatterns = [
     path('saveplayground',views.SavePlayground),
     path('problems',views.RenderProblemPage),
     path('viewproblem/<slug:url>',views.RenderProblemSolvePage),
+    path('viewproblem/<slug:url>/challenge=<int:cid>',views.RenderProblemSolvePage),
     path('executecode',views.ExecuteCode.as_view()),
     path('submitcode',views.SubmitCode.as_view()),
     path('create/challenge',views.RenderCreateChallenge),

@@ -1,12 +1,91 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Challenge Page</title>
+    <link rel="stylesheet" href="{% static 'css/challenge.css' %}">
 </head>
+
 <body>
-    
+    <div class="wrapperbodycontainer">
+        <div class="childwrapper">
+
+            <div class="leftpaneproblems" id="leftpane">
+                <div class="wrapperproblem">
+                    {% for problem in problems %}
+                    <div class="problemcard" onclick="RenderProblem('{{problem.url}}')">
+                        <div class="title">{{forloop.counter}}. {{problem.title}}</div>
+                        <p class="additional_feature">{{problem.difficulty}} ({{problem.points}} points)</p>
+                        <div class="author">Author: {{problem.author}}</div>
+                        <div class="solvedratio">Solved Ratio: {{problem.total_success_submissions}}/{{problem.total_submissions}}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="resizer" id="dragMe"></div>
+
+            <div class="rightmiddlepanelogs" id="middlepane">
+                <div class="wrapperlogs">
+                    <div class="logboxcontainer"></div>
+                    <div class="sendmessage">
+                        <input type="text" id="">
+                        <button type="button" id="sendmessage_btn">Send Message</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="resizer" id="dragMe1"></div>
+
+            <div class="rightpaneleaderboard" id="rightpane">
+                <div class="wrapperleaderboard">
+                    <div class="container-wrap">
+                        <section id="leaderboard">
+                            <nav class="ladder-nav">
+                                <div class="ladder-title">
+                                    <h1>Standings</h1>
+                                </div>
+                                <div class="ladder-search">
+                                    <input type="text" id="search-leaderboard" class="live-search-box"
+                                        placeholder="Search Team, Player..." />
+                                </div>
+                            </nav>
+                            <table id="rankings" class="leaderboard-results" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>Player</th>
+                                        <th>Country</th>
+                                        <th>Score</th>
+                                        <th>PS</th>
+                                        <th>Games Played</th>
+                                        <th>PTS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Load SCRIMcom Leaderboard Ranings -->
+                                </tbody>
+                            </table>
+                        </section>
+                    </div>
+                </div>
+
+            </div>
+        </div>
 </body>
+<script>
+    const roomName = {{ roomName }};
+</script>
+<script>
+    function RenderProblem(url){
+        window.open("/viewproblem/"+url+"/challenge="+roomName,'_blank');
+    }
+</script>
+<script src="{% static 'js/websocket.js' %}"></script>
+<script src="{% static 'js/resizer.js' %}"></script>
+
 </html>
