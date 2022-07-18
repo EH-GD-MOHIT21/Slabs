@@ -46,12 +46,15 @@ class ChallengeConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
+        user = self.scope["user"].username
+
+        message = str(user) + ": " + str(message)
 
         # Send message to room group
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                'type': 'challenge_message',
+                'type': 'challenge.message',
                 'message': message
             }
         )

@@ -58,6 +58,15 @@
     font-size: 16px;
 }
 
+.rightmiddlepanelogs .newmessage{
+  word-wrap: break-word;
+  font-size: 17px;
+  padding: 5px 10px;
+  background: #f8f9fa;
+  border-radius: 5px;
+  margin: 5px;
+}
+
 .wrapperbodycontainer .childwrapper .rightpaneleaderboard{
     width: 33%;
     height: 100vh;
