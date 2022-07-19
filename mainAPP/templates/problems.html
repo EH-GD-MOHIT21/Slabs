@@ -1,77 +1,61 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Problems @ CPWALA</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
 
-      .problem_wrapper {
-        min-width: 600px;
-        max-width: 60%;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Problems @ CPWALA</title>
+  <link rel="stylesheet" href="{% static '/css/problems.css' %}">
+</head>
 
-      .problemcard {
-        width: 100%;
-        background: lightgreen;
-        margin: 20px auto;
-        padding: 15px 30px;
-        cursor: pointer;
-      }
-
-      .author,
-      .solvedratio {
-        text-align: right;
-        margin-top: 5px;
-        margin-bottom: 5px;
-      }
-
-      .problemcard .title {
-        font-size: 18px;
-        font-weight: bolder;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="mainproblemcardwrapper">
-      <div class="uppercontainer"></div>
-      <div class="filters"></div>
-
-      <div class="problem_wrapper">
-        <div class="problemcard">
-          <div class="title">Dare to Factorial</div>
-          <p class="additional_feature">Easy (5 points)</p>
-          <div class="author">Author: Mohit Satija</div>
-          <div class="solvedratio">Solved Ratio: 300/5000</div>
+<body>
+  <div class="mainproblemcardwrapper">
+    <div class="problem_wrapper">
+      {% for problem in problems %}
+      <div class="problemcard" onclick="RenderProblem('{{problem.url}}')">
+        <div class="title">{{problem.title}}</div>
+        <p class="additional_feature">{{problem.difficulty}} ({{problem.points}} points)</p>
+        <div class="author">Author: {{problem.author.username}}</div>
+        <div class="solvedratio">Solved Ratio: {{problem.total_success_submissions}}/{{problem.total_submissions}}</div>
+        <button type="button" onclick="RenderProblem('{{problem.url}}')">Solve Problem</button>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="filters">
+      <div class="filtercategory">
+        <div class="titlefiltercategory">STATUS</div>
+        <div class="detailfiltercategory">
+          <p><label for="solved_problems"><input type="checkbox" id="solved_problems"> Solved</label></p>
+          <p><label for="unsolved_problems"><input type="checkbox" id="unsolved_problems"> UnSolved</label></p>
         </div>
-
-        <div class="problemcard">
-          <div class="title">Dare to Factorial</div>
-          <p class="additional_feature">Easy (5 points)</p>
-          <div class="author">Author: Mohit Satija</div>
-          <div class="solvedratio">Solved Ratio: 300/5000</div>
+      </div>
+      <div class="filtercategory">
+        <div class="titlefiltercategory">DIFFICULTY</div>
+        <div class="detailfiltercategory">
+          <p><label for="easy_problems"><input type="checkbox" id="easy_problems"> Easy</label></p>
+          <p><label for="medium_problems"><input type="checkbox" id="medium_problems"> Medium</label></p>
+          <p><label for="hard_problems"><input type="checkbox" id="hard_problems"> Hard</label></p>
         </div>
-
-        <div class="problemcard">
-          <div class="title">Dare to Factorial</div>
-          <p class="additional_feature">Easy (5 points)</p>
-          <div class="author">Author: Mohit Satija</div>
-          <div class="solvedratio">Solved Ratio: 300/5000</div>
-        </div>
-
-        <div class="problemcard">
-          <div class="title">Dare to Factorial</div>
-          <p class="additional_feature">Easy (5 points)</p>
-          <div class="author">Author: Mohit Satija</div>
-          <div class="solvedratio">Solved Ratio: 300/5000</div>
+      </div>
+      <div class="filtercategory">
+        <div class="titlefiltercategory">SORT BY</div>
+        <div class="detailfiltercategory">
+          <p><label for="default_problems"><input type="checkbox" id="default_problems"> Uploads</label></p>
+          <p><label for="title_problems"><input type="checkbox" id="title_problems"> Title</label></p>
+          <p><label for="points_problems"><input type="checkbox" id="points_problems"> Points</label></p>
+          <p><label for="submission_problems"><input type="checkbox" id="submission_problems"> Total submissions</label></p>
+          <p><label for="ssubmission_problems"><input type="checkbox" id="ssubmission_problems"> Total Success submissions</label></p>
         </div>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>
+<script>
+  function RenderProblem(url) {
+    window.open("/viewproblem/" + url, '_blank');
+  }
+</script>

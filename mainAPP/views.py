@@ -50,17 +50,22 @@ def SavePlayground(request):
 
 
 def RenderProblemPage(request):
-    return render(request, 'problems.html')
+    problems = Problem.objects.filter(published=True)[:]
+    return render(request, 'problems.html',{'problems':problems})
 
 
 def RenderProblemSolvePage(request, url, cid=None):
     if cid == None:
         problem = Problem.objects.get(url=url)
-        return render(request, 'problem_stat.html', {'problem': problem})
+        if problem.published:
+            return render(request, 'problem_stat.html', {'problem': problem})
+        return redirect('/problems')
     else:
-        print(cid)
+        challenge = Challenge.objects.get(id=int(cid))
         problem = Problem.objects.get(url=url)
-        return render(request, 'problem_stat.html', {'problem': problem})
+        if request.user in challenge.participates.all():
+            return render(request, 'problem_stat.html', {'problem': problem})
+        return redirect('/')
 
 
 class ExecuteCode(APIView):

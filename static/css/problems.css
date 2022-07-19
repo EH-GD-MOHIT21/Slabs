@@ -1,0 +1,78 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.problem_wrapper {
+    min-width: 600px;
+    max-width: 60%;
+    flex: 0.7;
+}
+
+.problemcard {
+    width: 100%;
+    background: lightgreen;
+    margin: 20px auto;
+    padding: 15px 30px;
+    cursor: pointer;
+    box-shadow: 0 3px 10px 0 rgb(0 0 0 / 10%);
+}
+
+.author,
+.solvedratio {
+    text-align: right;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.problemcard .title {
+    font-size: 18px;
+    font-weight: bolder;
+}
+
+.problemcard button{
+    display: block;
+    margin: auto;
+    cursor: pointer;
+    padding: 7px 12px;
+    border-radius: 4px;
+    border: 1px solid gray;
+    outline: none;
+    font-size: 16px;
+}
+
+.mainproblemcardwrapper{
+    display: flex;
+    justify-content: space-around;
+}
+
+.filters{
+    flex: 0.3;
+    user-select: none;
+}
+
+.filtercategory{
+    border-bottom: 1px solid #e7eeef;
+    padding: 20px 0;
+}
+
+.titlefiltercategory{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.detailfiltercategory{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 17px;
+}
+
+.detailfiltercategory p{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.detailfiltercategory p label{
+    cursor: pointer;
+}
