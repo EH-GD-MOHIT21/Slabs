@@ -58,11 +58,11 @@
                                 <thead>
                                     <tr>
                                         <th>Rank</th>
+                                        <th>Logo</th>
                                         <th>Player</th>
+                                        <th>Username</th>
                                         <th>Country</th>
-                                        <th>Score</th>
-                                        <th>PS</th>
-                                        <th>Games Played</th>
+                                        <th>Problems Solved</th>
                                         <th>PTS</th>
                                     </tr>
                                 </thead>
@@ -71,6 +71,10 @@
                                 </tbody>
                             </table>
                         </section>
+                    </div>
+                    <div class="btnscontainer">
+                        <button type="button" id="prevbtnleader">Previous</button>
+                        <button type="button" id="nextbtnleader">Next</button>
                     </div>
                 </div>
 
@@ -87,5 +91,6 @@
 </script>
 <script src="{% static 'js/websocket.js' %}"></script>
 <script src="{% static 'js/resizer.js' %}"></script>
+<script src="{% static 'js/fetchleaderboard.js' %}"></script>
 
 </html>

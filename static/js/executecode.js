@@ -151,7 +151,7 @@ function toggle_block_btns_submit(){
 }
 
 
-async function submitcode(code,language,problem="") {
+async function submitcode(code,language,problem="",challenge=""){
     toggle_block_btns_submit();
     let response = await fetch('/submitcode', {
         credentials: 'include',
@@ -165,7 +165,8 @@ async function submitcode(code,language,problem="") {
         body: JSON.stringify({
             "language": language,
             "code": code,
-            "problem_id": problem
+            "problem_id": problem,
+            "challenge": challenge
         })
     })
     if (response.ok) {

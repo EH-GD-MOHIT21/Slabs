@@ -101,6 +101,10 @@
     })
 
     document.getElementById('submit_code').addEventListener('click',function(){
-        submitcode(editor.getValue(), document.getElementById('choose_programming_language').value,  document.getElementById('problem_id').value)
+        if(document.URL.includes('challenge'))
+            var challenge = new URL(document.URL).pathname.split("=")[1];
+        else
+            var challenge = "";
+        submitcode(editor.getValue(), document.getElementById('choose_programming_language').value,  document.getElementById('problem_id').value,challenge)
     })
 </script>

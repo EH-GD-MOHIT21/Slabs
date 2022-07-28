@@ -92,3 +92,4 @@ class UserSubmission(models.Model):
     submission_time = models.DateTimeField(auto_now_add=True)
     problem = models.ForeignKey(Problem,on_delete=models.Case)
     challenge = models.ForeignKey(Challenge,null=True,blank=True,on_delete=models.Case)
+    submission_status = models.CharField(max_length=8,default='failure')

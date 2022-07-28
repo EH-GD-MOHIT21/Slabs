@@ -225,3 +225,8 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 ACCOUNT_FORMS = {
     'signup': 'users.forms.SignupForm',
 }
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+}

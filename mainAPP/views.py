@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import redirect, render
-from .models import Challenge, Playground, Problem, TextCase
+from users.forms import User
+from .models import Challenge, Playground, Problem, TextCase, UserSubmission
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .tasks import execute_code
@@ -9,9 +10,12 @@ from django.contrib.auth.hashers import make_password, check_password
 import random
 from django.conf import settings
 import os
-from datetime import datetime
+from datetime import datetime,timedelta
 import pytz
 from django.utils import timezone
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.serializers import ModelSerializer
+from users.models import User
 # Create your views here.
 
 
@@ -51,7 +55,7 @@ def SavePlayground(request):
 
 def RenderProblemPage(request):
     problems = Problem.objects.filter(published=True)[:]
-    return render(request, 'problems.html',{'problems':problems})
+    return render(request, 'problems.html', {'problems': problems})
 
 
 def RenderProblemSolvePage(request, url, cid=None):
@@ -107,11 +111,12 @@ class SubmitCode(APIView):
                 problem_code = request.data['problem_id']
                 code = request.data["code"]
                 language = request.data["language"]
+                challenge = request.data['challenge']
                 try:
                     test_case = TextCase.objects.get(
                         problem__id=int(problem_code))
                     task_id = execute_code.delay(code, language, test_case.inputs, request.user.username, test_case.output.replace(
-                        '\r\n', '\n').replace('\r', '\n'), problem_code)
+                        '\r\n', '\n').replace('\r', '\n'), problem_code, challenge)
                     print(task_id)
                     return Response({'status': 200, 'message': 'success', "task_id": str(task_id)})
                 except Exception as e:
@@ -149,15 +154,15 @@ def HandleJoinChallenge(request, cid, redirected=False):
             users = challenge.participates
 
             if(users.contains(request.user)):
-                return render(request, 'challenge.html',{'roomName':challenge.id,'problems':challenge.problems.all()})
+                return render(request, 'challenge.html', {'roomName': challenge.id, 'problems': challenge.problems.all()})
             else:
                 challenge.participates.add(request.user)
                 challenge.save()
-                return render(request, 'challenge.html',{'roomName':challenge.id,'problems':challenge.problems.all()})
+                return render(request, 'challenge.html', {'roomName': challenge.id, 'problems': challenge.problems.all()})
 
         users = challenge.participates
         if(users.contains(request.user)):
-            return render(request, 'challenge.html',{'roomName':challenge.id,'problems':challenge.problems.all()})
+            return render(request, 'challenge.html', {'roomName': challenge.id, 'problems': challenge.problems.all()})
 
         return HttpResponse('<h1>Time for joining this challenge has ended.</h1>')
 
@@ -281,3 +286,179 @@ def ManageDate(date, user_timezone):
         return temp
     except:
         return None
+
+
+class LeaderBoardSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["first_name","last_name","username","country","profile_image"]
+
+
+class UserSubmissionSerializer(ModelSerializer):
+    class Meta:
+        model = UserSubmission
+        fields = "__all__"
+
+
+class CustomPagination(PageNumberPagination):
+    page_size = 15
+    page_size_query_param = 'page'
+    page_query_param = 'p'
+
+    def get_paginated_response(self, data):
+        response = Response(data)
+        response['count'] = self.page.paginator.count
+        response['next'] = self.get_next_link()
+        response['previous'] = self.get_previous_link()
+        return response
+
+
+
+def Date_avg(dates,any_reference_date,contest_start_time):
+    if not dates:
+        return None
+    return any_reference_date + sum([date - any_reference_date for date in dates], timedelta()) / len(dates) - contest_start_time
+
+
+
+class LeaderBoardRankingChallenge(APIView):
+    pagination_class = CustomPagination
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            # do stuff
+            challenge = request.GET.get('challenge')
+            try:
+                challenge = Challenge.objects.get(id=int(challenge))
+            except:
+                return Response({'status':404,'message':'Challenge Not Found.'})
+            
+            users = challenge.participates.all()
+            ref_date = challenge.open_time
+            serializer = LeaderBoardSerializer(users, many=True)
+            data = serializer.data
+            for subdata in data:
+                user = subdata['username']
+                usertotalsubmission = UserSubmission.objects.filter(user=User.objects.get(username=user),challenge=challenge,submission_status='success')
+                solved_problem_ids = []
+                user_unique_submissions = []
+                dates = []
+                for submission in usertotalsubmission:
+                    pid = submission.problem.id
+                    if pid not in solved_problem_ids:
+                        solved_problem_ids.append(pid)
+                        submission_data = UserSubmissionSerializer(submission).data
+                        user_unique_submissions.append(submission_data)
+                        dates.append(submission.submission_time)
+                subdata['user_submissions'] = user_unique_submissions
+                subdata['avgtime'] = Date_avg(dates,ref_date,ref_date)
+            res = sorted(serializer.data, key = lambda x: x['avgtime'])
+            for index,user in enumerate(res):
+                user["rank"] = index + 1
+            page = self.paginate_queryset(res)
+            return self.get_paginated_response(page)
+
+        else:
+            return Response({'status': 403, 'message': 'Please Register Yourself.', 'data': None})
+
+    @property
+    def paginator(self):
+        """
+        The paginator instance associated with the view, or `None`.
+        """
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+        return self._paginator
+
+    def paginate_queryset(self, queryset):
+        """
+        Return a single page of results, or `None` if pagination is disabled.
+        """
+        if self.paginator is None:
+            return None
+        return self.paginator.paginate_queryset(queryset, self.request, view=self)
+
+    def get_paginated_response(self, data):
+        """
+        Return a paginated style `Response` object for the given output data.
+        """
+        assert self.paginator is not None
+        return self.paginator.get_paginated_response(data)
+
+
+
+class SearchPlayerLeaderboard(APIView):
+    pagination_class = CustomPagination
+
+    def get(self,request,*args,**kwargs):
+        if request.user.is_authenticated:
+            challenge = request.GET.get('challenge',None)
+            inps = request.GET.get('param','')
+            try:
+                challenge = Challenge.objects.get(id=int(challenge))
+            except:
+                return Response({'status':500,'message':'Challenge Not described.','data':None})
+            usersrequired = challenge.participates.filter(first_name__contains=inps) | challenge.participates.filter(username__contains=inps) | challenge.participates.filter(last_name__contains=inps)
+            users = challenge.participates.all()
+            ref_date = challenge.open_time
+            serializer = LeaderBoardSerializer(users, many=True)
+            data = serializer.data
+            for subdata in data:
+                user = subdata['username']
+                usertotalsubmission = UserSubmission.objects.filter(user=User.objects.get(username=user),challenge=challenge,submission_status='success')
+                solved_problem_ids = []
+                user_unique_submissions = []
+                dates = []
+                for submission in usertotalsubmission:
+                    pid = submission.problem.id
+                    if pid not in solved_problem_ids:
+                        solved_problem_ids.append(pid)
+                        submission_data = UserSubmissionSerializer(submission).data
+                        user_unique_submissions.append(submission_data)
+                        dates.append(submission.submission_time)
+                subdata['user_submissions'] = user_unique_submissions
+                subdata['avgtime'] = Date_avg(dates,ref_date,ref_date)
+            res = sorted(serializer.data, key = lambda x: x['avgtime'])
+            for index,user in enumerate(res):
+                user["rank"] = index+1
+            tres = []
+            for user in res:
+                for user1 in usersrequired:
+                    if user["username"] == user1.username:
+                        tres.append(user)
+            page = self.paginate_queryset(tres)
+            return self.get_paginated_response(page)
+
+        else:
+            return Response({'status': 403, 'message': 'Please Register Yourself.', 'data': None})
+
+
+    @property
+    def paginator(self):
+        """
+        The paginator instance associated with the view, or `None`.
+        """
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+        return self._paginator
+
+    def paginate_queryset(self, queryset):
+        """
+        Return a single page of results, or `None` if pagination is disabled.
+        """
+        if self.paginator is None:
+            return None
+        return self.paginator.paginate_queryset(queryset, self.request, view=self)
+
+    def get_paginated_response(self, data):
+        """
+        Return a paginated style `Response` object for the given output data.
+        """
+        assert self.paginator is not None
+        return self.paginator.get_paginated_response(data)

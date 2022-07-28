@@ -3,7 +3,7 @@ from django_summernote.admin import SummernoteModelAdmin
 
 # Register your models here.
 
-from .models import Playground,Problem,TextCase,Challenge
+from .models import Playground,Problem,TextCase,Challenge,UserSubmission
 
 admin.site.register(Playground)
 admin.site.register(TextCase)
@@ -14,3 +14,5 @@ class ModifiedProblem(SummernoteModelAdmin):
     summernote_fields = ('statement',)
 
 admin.site.register(Problem, ModifiedProblem)
+
+admin.site.register(UserSubmission)

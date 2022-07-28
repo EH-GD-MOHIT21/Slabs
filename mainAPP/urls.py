@@ -16,4 +16,6 @@ urlpatterns = [
     path('mychallenges',views.DisplayMyChallenges), # my (public+private) challenges
     path('challenges',views.DisplayAvailableChallenges), #public challenges
     path('search/challenge',views.SearchChallenge), # search a challenge
+    path('leaderboard',views.LeaderBoardRankingChallenge.as_view()),
+    path('searchleaderboard',views.SearchPlayerLeaderboard.as_view()),
 ]

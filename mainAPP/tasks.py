@@ -1,3 +1,4 @@
+from operator import mod
 from celery import shared_task
 from celery_progress.backend import ProgressRecorder
 from django.conf import settings
@@ -6,7 +7,7 @@ import json
 from users.models import User
 from django.utils import timezone
 
-from mainAPP.models import Problem, UserSubmission
+from mainAPP.models import Challenge, Problem, UserSubmission
 
 
 def ParseLanguage(language):
@@ -22,7 +23,7 @@ def ParseLanguage(language):
 
 
 @shared_task(bind=True)
-def execute_code(self, code, language, inputs=None, user=None, original_outputs=None,problem_id=None):
+def execute_code(self, code, language, inputs=None, user=None, original_outputs=None,problem_id=None,challenge=None):
     compiler_url = settings.COMPILER
     language = ParseLanguage(language)
     payload = {
@@ -45,10 +46,13 @@ def execute_code(self, code, language, inputs=None, user=None, original_outputs=
             model.code = code
             model.submission_time = timezone.now()
             model.problem = problem
-            model.save()
+            if challenge != "":
+                challenge = Challenge.objects.get(id=int(challenge))
+                model.challenge = challenge
             if output['output'].strip() == original_outputs.strip():
                 # correct ans
                 print('yes')
+                model.submission_status = 'success'
                 problem.total_submissions += 1
                 problem.total_success_submissions += 1
                 user.correct_submissions += 1
@@ -58,6 +62,7 @@ def execute_code(self, code, language, inputs=None, user=None, original_outputs=
                 print('no')
                 problem.total_submissions += 1
                 user.incorrect_submissions += 1
+            model.save()
             problem.save()
             user.save()
             if flag:
