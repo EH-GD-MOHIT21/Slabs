@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>signup</title>
     <link rel="shortcut icon" href="/static/imgs/web/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/tooltip.css' %}">
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css" integrity="sha512-rRQtF4V2wtAvXsou4iUAs2kXHi3Lj9NE7xJR77DE7GHsxgY9RTWy93dzMXgDIG8ToiRTD45VsDNdTiUagOFeZA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -23,7 +24,7 @@
             <img class="mainimg" src="{% static 'imgs/web/gayle1.png' %}">
         </div>
         <div class="containerlogoform">
-            {{form.as_p}}
+            {% comment %} {{form.as_p}} {% endcomment %}
             <img class="logoimg" src="{% static 'imgs/web/logo.png' %}">
             <div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
                 <form method="post" action="{% url 'account_signup' %}" class="login100-form validate-form" id="signupform">
@@ -95,12 +96,12 @@
                     </div>
                     <p id="msg-error-6" class="form-text error-text m-b-23"></p>
 
-                    <div class="wrap-input100 validate-input">
+                    <div class="wrap-input100 validate-input tooltip">
                         <label for="id_password1" class="label-input100">Password</label>
+                        <span class="tooltiptext"><ul><li>Your password can’t be too similar to your other personal information.</li><li>Your password must contain at least 8 characters.</li><li>Your password can’t be a commonly used password.</li><li>Your password can’t be entirely numeric.</li></ul></span>
                         {{form.password1}}
                     </div>
                     <p id="msg-error-7" class="form-text error-text m-b-23"></p>
-
 
                     <div class="wrap-input100 validate-input">
                         <label for="id_password2" class="label-input100">Repeat Password</label>

@@ -1,3 +1,4 @@
+from datetime import datetime
 from operator import mod
 from celery import shared_task
 from celery_progress.backend import ProgressRecorder
@@ -48,6 +49,12 @@ def execute_code(self, code, language, inputs=None, user=None, original_outputs=
             model.problem = problem
             if challenge != "":
                 challenge = Challenge.objects.get(id=int(challenge))
+                if isinstance(challenge.open_time,datetime):
+                    if challenge.open_time > timezone.now():
+                        return 'Challenge Not Started Yet.'
+                if isinstance(challenge.close_time,datetime):
+                    if challenge.close_time < timezone.now():
+                        return 'Challenge Has Ended.'
                 model.challenge = challenge
             if output['output'].strip() == original_outputs.strip():
                 # correct ans
@@ -66,7 +73,7 @@ def execute_code(self, code, language, inputs=None, user=None, original_outputs=
             problem.save()
             user.save()
             if flag:
-                return 'wrong answer'
+                return 'wrong answer, one or more test case wrong.'
             else:
                 return 'success'
         except:

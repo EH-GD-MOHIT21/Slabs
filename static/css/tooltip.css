@@ -1,0 +1,62 @@
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 60%;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    opacity: 0;
+}
+
+.tooltip:hover .tooltiptext{
+    animation: mohit 3s linear;
+}
+
+@keyframes mohit {
+    0%{
+        opacity: 0;
+        visibility: visible;
+    }
+    10%{
+        opacity: 0.3;
+    }
+    20%{
+        opacity: 0.6;
+    }
+    40%{
+        opacity: 0.9;
+    }
+    60%{
+        opacity: 0.9;
+    }
+    80%{
+        opacity: 0.9;
+    }
+    90%{
+        opacity: 0.5;
+    }
+    100%{
+        opacity: 0;
+    }
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}

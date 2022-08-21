@@ -118,7 +118,7 @@ function showSubmitInfo(data){
         elm.style.color = 'green';
         elm.style.fontWeight = 600;
     }else{
-        elm.innerText = 'Sorry! one or more test case failed.';
+        elm.innerText = data;
         elm.style.fontSize = '20px';
         elm.style.color = 'crimson';
         elm.style.fontWeight = 600;
